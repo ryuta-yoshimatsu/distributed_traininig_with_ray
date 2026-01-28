@@ -8,6 +8,11 @@ include:
   - resources/*.yml
   - resources/*/*.yml
 
+sync:
+  include:
+    - "notebooks/*.ipynb"
+    - "notebooks/*.md"
+
 targets:
   dev:
     # The default target uses 'mode: development' to create a development copy.
