@@ -141,6 +141,7 @@ After running the full workflow, you will have:
 ## 🔧 Prerequisites
 
 - Databricks workspace with access to CPU and GPU clusters
+- **Cluster access mode**: Dedicated (formerly single user) or No isolation shared access modes
 - Ray installed on both clusters
 - Delta Lake enabled
 - Unity Catalog configured with appropriate catalog and schema
