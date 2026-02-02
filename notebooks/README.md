@@ -41,7 +41,22 @@
 - **Output Table**: `ryuta.ray.batch_inference_results` - Predictions from all models
 - **MLflow Tracking**: Logs inference run metrics and model list
 
-## 4. `generate_synthetic_data.ipynb` - Data Generation Notebook
+## 4. `model_serving_gpu.ipynb` - GPU Model Serving Notebook
+
+**Location**: `notebooks/model_serving_gpu.ipynb`
+
+**Purpose**: Deploys a trained GPU model to a model serving endpoint and makes inference requests
+
+- **Model Source**: Loads a PyTorch MLP model from `ray_gpu_model_training.ipynb`
+- **Endpoint Type**: GPU-powered (NVIDIA T4) model serving endpoint
+- **Features**:
+  - Creates/updates model serving endpoint with T4 GPU (`GPU_SMALL`)
+  - Makes single and batch inference requests via REST API
+  - Performance benchmarking (latency, throughput)
+  - Scale-to-zero enabled for cost savings
+- **Output**: Real-time predictions via REST API
+
+## 5. `generate_synthetic_data.ipynb` - Data Generation Notebook
 
 **Location**: `notebooks/generate_synthetic_data.ipynb`
 
@@ -71,21 +86,23 @@
                                 ↓
                    Unity Catalog Model Registry
                                 ↓
-               ┌────────────────────────────────────┐
-               │   ray_cpu_batch_inference          │
-               │   (CPU Cluster - 256 cores)        │
-               │   ↓                                │
-               │   Distributed Batch Inference      │
-               │   • Load cpu_model_*_child models  │
-               │   • Parallel inference via Ray     │
-               │   • Ensemble predictions           │
-               └──────────────┬─────────────────────┘
-                              ↓
-               ┌────────────────────────────────────┐
-               │   Output Delta Tables              │
-               │   • batch_inference_results        │
-               │   • model_predictions              │
-               └────────────────────────────────────┘
+       ┌────────────────────────┴────────────────────────┐
+       ↓                                                 ↓
+┌────────────────────────────────────┐   ┌────────────────────────────────────┐
+│   ray_cpu_batch_inference          │   │   model_serving_gpu                │
+│   (CPU Cluster - 256 cores)        │   │   (Model Serving - T4 GPU)         │
+│   ↓                                │   │   ↓                                │
+│   Distributed Batch Inference      │   │   Real-time Model Serving          │
+│   • Load cpu_model_*_child models  │   │   • Deploy gpu_model to endpoint   │
+│   • Parallel inference via Ray     │   │   • REST API inference             │
+│   • Ensemble predictions           │   │   • Scale-to-zero enabled          │
+└──────────────┬─────────────────────┘   └──────────────┬─────────────────────┘
+               ↓                                        ↓
+┌────────────────────────────────────┐   ┌────────────────────────────────────┐
+│   Output Delta Tables              │   │   Model Serving Endpoint           │
+│   • batch_inference_results        │   │   • gpu-model-90-serving           │
+│   • model_predictions              │   │   • Real-time predictions          │
+└────────────────────────────────────┘   └────────────────────────────────────┘
 ```
 
 ## ✨ Key Features
@@ -99,6 +116,7 @@
 7. **MLflow Tracking**: Parent-child run structure for organized experiment tracking
 8. **Feature Diversity**: 7 different feature selection strategies
 9. **Progress Tracking**: Real-time progress updates during training and inference
+10. **GPU Model Serving**: Deploy PyTorch models to T4 GPU endpoints for real-time inference
 
 
 ## 🚀 How to Use
@@ -107,6 +125,7 @@
 2. **Run CPU training notebook** on your CPU cluster (8 workers, 32 cores each)
 3. **Run GPU training notebook** on your GPU cluster (multi-node, 4+ GPUs) - can run in parallel with step 2
 4. **Run batch inference notebook** after training completes to generate predictions
+5. **Deploy GPU model to serving endpoint** using `model_serving_gpu.ipynb` for real-time inference
 
 
 ## 📊 Expected Results
@@ -117,6 +136,7 @@ After running the full workflow, you will have:
 - Ensemble batch inference results in Delta table
 - Per-model predictions for detailed analysis
 - MLflow tracking for all training and inference runs
+- GPU model serving endpoint for real-time predictions
 
 ## 🔧 Prerequisites
 
@@ -156,3 +176,9 @@ After running the full workflow, you will have:
 |-------|-------------|
 | `ryuta.ray.synthetic_data` | Source data for training and inference |
 | `ryuta.ray.batch_inference_results` | Predictions from all models (row_index, model_name, probability, prediction) |
+
+## 🌐 Model Serving Endpoints
+
+| Endpoint | Description |
+|----------|-------------|
+| `gpu-model-90-serving` | T4 GPU endpoint serving PyTorch MLP model (model ID 90) |
