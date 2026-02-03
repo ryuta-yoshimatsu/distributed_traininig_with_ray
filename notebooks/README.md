@@ -24,7 +24,7 @@
   - Multi-core models: 4 CPUs (Random Forest, XGBoost, LightGBM)
 - **Model IDs**: 0-89
 - **Architecture**: Parent-child MLflow run structure with Ray remote functions
-- **Output**: Models registered to Unity Catalog as `ryuta.ray.cpu_model_*_child`
+- **Output**: Models registered to Unity Catalog as `{catalog}.{schema}.cpu_model_*_child`
 
 ## 3. `ray_gpu_model_training.ipynb` - GPU Cluster Training Notebook
 
@@ -36,7 +36,7 @@
 - **Cluster**: Multi-node with 4+ GPUs (g4dn.xlarge recommended)
 - **Resource Allocation**: 1 GPU per model
 - **Model IDs**: 90-99
-- **Output**: Models registered to Unity Catalog as `ryuta.ray.gpu_model_*_child`
+- **Output**: Models registered to Unity Catalog as `{catalog}.{schema}.gpu_model_*_child`
 
 ## 4. `ray_cpu_batch_inference.ipynb` - Distributed Batch Inference Notebook
 
@@ -50,7 +50,7 @@
   - Parallel model loading and inference via Ray Core
   - All model predictions written to a single Delta table
   - Per-model accuracy analysis (if labels available)
-- **Output Table**: `ryuta.ray.batch_inference_results` - Predictions from all models
+- **Output Table**: `{catalog}.{schema}.batch_inference_results` - Predictions from all models
 - **MLflow Tracking**: Logs inference run metrics and model list
 
 ## 5. `model_serving_gpu.ipynb` - GPU Model Serving Notebook
