@@ -12,7 +12,7 @@
   - Single-core models: 1 CPU (Logistic Regression, SVM, Naive Bayes)
   - Multi-core models: 4 CPUs (Random Forest, XGBoost, LightGBM)
 - **Model IDs**: 0-89
-- **Output**: Models registered to Unity Catalog as `ryuta.ray.cpu_model_*_ray_tune`
+- **Output**: Models registered to Unity Catalog as `{catalog}.{schema}.cpu_model_*_ray_tune`
 
 ## 2. `ray_gpu_model_training.ipynb` - GPU Cluster Training Notebook
 
@@ -24,7 +24,7 @@
 - **Cluster**: Multi-node with 4+ GPUs (g4dn.xlarge recommended)
 - **Resource Allocation**: 1 GPU per model
 - **Model IDs**: 90-99
-- **Output**: Models registered to Unity Catalog as `ryuta.ray.gpu_model_*_child`
+- **Output**: Models registered to Unity Catalog as `{catalog}.{schema}.gpu_model_*_child`
 
 ## 3. `ray_cpu_batch_inference.ipynb` - Distributed Batch Inference Notebook
 
@@ -38,7 +38,7 @@
   - Parallel model loading and inference via Ray Core
   - All model predictions written to a single Delta table
   - Per-model accuracy analysis (if labels available)
-- **Output Table**: `ryuta.ray.batch_inference_results` - Predictions from all models
+- **Output Table**: `{catalog}.{schema}.batch_inference_results` - Predictions from all models
 - **MLflow Tracking**: Logs inference run metrics and model list
 
 ## 4. `model_serving_gpu.ipynb` - GPU Model Serving Notebook
@@ -65,7 +65,7 @@
 - **Features**: 100 features (50 informative, 25 redundant, 25 noise)
 - **Samples**: 10,000 rows
 - **Labels**: Binary classification (60/40 class balance)
-- **Output**: `ryuta.ray.synthetic_data`
+- **Output**: `{catalog}.{schema}.synthetic_data`
 
 ## 🔄 Execution Workflow
 
@@ -95,7 +95,7 @@
 │   Distributed Batch Inference      │   │   Real-time Model Serving          │
 │   • Load cpu_model_*_child models  │   │   • Deploy gpu_model to endpoint   │
 │   • Parallel inference via Ray     │   │   • REST API inference             │
-│   • Ensemble predictions           │   │   • Scale-to-zero enabled          │
+│                                    │   │   • Scale-to-zero enabled          │
 └──────────────┬─────────────────────┘   └──────────────┬─────────────────────┘
                ↓                                        ↓
 ┌────────────────────────────────────┐   ┌────────────────────────────────────┐
@@ -111,12 +111,11 @@
 2. **Unity Catalog Model Registry**: All models registered to Unity Catalog for governance and versioning
 3. **No ID Conflicts**: CPU models (0-89), GPU models (90-99)
 4. **Distributed Batch Inference**: Ray Core enables parallel model loading and inference
-5. **Ensemble Predictions**: Aggregates predictions from all models by averaging probabilities
-6. **Ray Tune HPO**: CPU models use Ray Tune for distributed hyperparameter optimization
-7. **MLflow Tracking**: Parent-child run structure for organized experiment tracking
-8. **Feature Diversity**: 7 different feature selection strategies
-9. **Progress Tracking**: Real-time progress updates during training and inference
-10. **GPU Model Serving**: Deploy PyTorch models to T4 GPU endpoints for real-time inference
+5. **Ray Tune HPO**: CPU models use Ray Tune for distributed hyperparameter optimization
+6. **MLflow Tracking**: Parent-child run structure for organized experiment tracking
+7. **Feature Diversity**: 7 different feature selection strategies
+8. **Progress Tracking**: Real-time progress updates during training and inference
+9. **GPU Model Serving**: Deploy PyTorch models to T4 GPU endpoints for real-time inference
 
 
 ## 🚀 How to Use
@@ -133,7 +132,6 @@
 After running the full workflow, you will have:
 - 90 traditional ML models trained and registered to Unity Catalog
 - 10 deep learning models trained and registered to Unity Catalog
-- Ensemble batch inference results in Delta table
 - Per-model predictions for detailed analysis
 - MLflow tracking for all training and inference runs
 - GPU model serving endpoint for real-time predictions
