@@ -9,7 +9,7 @@
 - **Features**: 100 features (50 informative, 25 redundant, 25 noise)
 - **Samples**: 10,000 rows
 - **Labels**: Binary classification (60/40 class balance)
-- **Output**: `ryuta.ray.synthetic_data`
+- **Output**: `{catalog}.{schema}.synthetic_data`
 
 ## 2. `ray_cpu_model_training_ray_core.ipynb` - CPU Cluster Training Notebook
 
@@ -78,7 +78,7 @@
                     │   • 10,000 samples, 100 features   │
                     │   • Binary classification          │
                     │   ↓                                │
-                    │   ryuta.ray.synthetic_data         │
+                    │   {catalog}.{schema}.synthetic_data│
                     └──────────────┬─────────────────────┘
                                    ↓
        ┌───────────────────────────┴───────────────────────────┐
@@ -92,7 +92,7 @@
 │  (IDs: 0-89)                     │     │  (IDs: 90-99)                   │
 │  ↓                               │     │  ↓                              │
 │  Register to Unity Catalog       │     │  Register to Unity Catalog      │
-│  ryuta.ray.cpu_model_*_child     │     │  ryuta.ray.gpu_model_*_child    │
+│  {catalog}.{schema}.cpu_*_child  │     │  {catalog}.{schema}.gpu_*_child │
 └──────────────┬───────────────────┘     └──────────────┬──────────────────┘
                │                                        │
                └────────────────┬───────────────────────┘
@@ -157,7 +157,7 @@ After running the full workflow, you will have:
 - Ray installed on both clusters
 - Delta Lake enabled
 - Unity Catalog configured with appropriate catalog and schema
-- Synthetic dataset table: `ryuta.ray.synthetic_data`
+- Synthetic dataset table: `{catalog}.{schema}.synthetic_data`
 
 ## 📦 Dependencies
 
@@ -186,8 +186,8 @@ After running the full workflow, you will have:
 
 | Table | Description |
 |-------|-------------|
-| `ryuta.ray.synthetic_data` | Source data for training and inference |
-| `ryuta.ray.batch_inference_results` | Predictions from all models (row_index, model_name, probability, prediction) |
+| `{catalog}.{schema}.synthetic_data` | Source data for training and inference |
+| `{catalog}.{schema}.batch_inference_results` | Predictions from all models (row_index, model_name, probability, prediction) |
 
 ## 🌐 Model Serving Endpoints
 
